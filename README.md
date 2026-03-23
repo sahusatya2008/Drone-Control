@@ -1,6 +1,6 @@
 # UADIB — Universal Autonomous Drone Interface Builder STAGE I
 
-> **Version:** 0.1.0 · **Python:** ≥3.11 · **License:** Proprietary · **Developer:** Satya Narayan Sahu
+> **Version:** 1.1.0 · **Python:** ≥3.11 · **License:** Proprietary · **Developer:** Satya Narayan Sahu
 
 ---
 
