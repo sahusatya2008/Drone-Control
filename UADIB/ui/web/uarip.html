@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UARIP Mode</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header>
+    <div>
+      <h1>UARIP Mode</h1>
+      <p>Universal Autonomous Robotics Intelligence Platform</p>
+    </div>
+    <div class="header-actions">
+      <a class="btn-link" href="/" rel="noreferrer">Back to UADIB</a>
+      <a class="btn-link" href="/docs" target="_blank" rel="noreferrer">API Docs</a>
+      <a class="btn-link" href="/static/ipr.html" rel="noreferrer">IPR</a>
+    </div>
+  </header>
+  <aside id="deviceMeta" class="device-meta">Loading device identity...</aside>
+
+  <main>
+    <section class="card">
+      <h2>Overview</h2>
+      <button id="loadOverview">Load UARIP Overview</button>
+      <pre id="overviewBox" class="output"></pre>
+    </section>
+
+    <section class="card two-col">
+      <div>
+        <h2>Protocol Reverse Engineering</h2>
+        <label>Packet Samples (hex, one per line)
+          <textarea id="packetHex" rows="6">fe01020304ff
+fe100120a0ff
+fe100122a4ff</textarea>
+        </label>
+        <button id="inferProtocol">Infer Protocol Schema</button>
+        <pre id="protocolBox" class="output"></pre>
+      </div>
+      <div>
+        <h2>Capability Graph + Dynamic Panel</h2>
+        <div class="grid-2">
+          <label><input id="capNav" type="checkbox" checked /> Navigation</label>
+          <label><input id="capCam" type="checkbox" checked /> Camera Control</label>
+          <label><input id="capWay" type="checkbox" checked /> Waypoint Navigation</label>
+          <label><input id="capObs" type="checkbox" /> Obstacle Avoidance</label>
+          <label><input id="capPayload" type="checkbox" /> Payload Control</label>
+        </div>
+        <button id="buildGraph">Build Graph + Panel</button>
+        <pre id="graphBox" class="output"></pre>
+      </div>
+    </section>
+
+    <section class="card two-col">
+      <div>
+        <h2>Swarm Coordination Step</h2>
+        <label>Swarm Agents JSON
+          <textarea id="swarmJson" rows="9">[
+  {"id":"d1","pos":[0,0,10],"vel":[1,0,0],"goal":[20,20,20]},
+  {"id":"d2","pos":[2,0,10],"vel":[1,0.2,0],"goal":[20,20,20]},
+  {"id":"d3","pos":[-2,0,10],"vel":[0.8,0.1,0],"goal":[20,20,20]}
+]</textarea>
+        </label>
+        <button id="runSwarm">Run Swarm Step</button>
+        <pre id="swarmBox" class="output"></pre>
+      </div>
+      <div>
+        <h2>Simulation + Security</h2>
+        <div class="btn-row">
+          <button id="listProviders">List Simulation Providers</button>
+          <button id="launchSim">Launch PyBullet Scenario</button>
+        </div>
+        <pre id="simBox" class="output"></pre>
+        <label>Anomaly Signal (comma separated)
+          <input id="signalInput" value="1,1.2,0.9,1.1,5.8,0.95" />
+        </label>
+        <button id="runAnomaly">Run Anomaly Monitor</button>
+        <pre id="securityBox" class="output"></pre>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/static/uarip.js"></script>
+  <script type="module" src="/static/device_meta.js?v=20260308-1"></script>
+  <script src="/static/security_lock.js?v=20260308-2"></script>
+</body>
+</html>

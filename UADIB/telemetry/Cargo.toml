@@ -1,0 +1,10 @@
+[package]
+name = "uadib_telemetry_parser"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "uadib_telemetry_parser"
+path = "telemetry_parser.rs"
+
+[dependencies]

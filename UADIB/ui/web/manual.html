@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UADIB Manual</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header>
+    <div>
+      <h1>UADIB Full Manual</h1>
+      <p>First-Time Operator Guide for Demo + Real Drone + Controls + Safety</p>
+    </div>
+    <div class="header-actions">
+      <a class="btn-link" href="/" rel="noreferrer">Back to Control Center</a>
+      <a class="btn-link" href="/docs" target="_blank" rel="noreferrer">Open API Docs</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>1. What UADIB Does (Simple Overview)</h2>
+      <div class="manual-box">
+        UADIB is a universal drone interface builder. When you connect a drone endpoint, it attempts to detect protocol, profile the drone, map capabilities, auto-load plugins, and generate a control dashboard. You can operate through UI buttons or API endpoints.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>2. Prerequisites (Before You Start)</h2>
+      <div class="manual-box">
+        1. Python virtual environment support installed.
+        <br>2. Run command from project root: <code>/Users/drhacker/Documents/drone/UADIB</code>.
+        <br>3. Make sure no firewall blocks local port used by UADIB.
+        <br>4. Keep token ready. Default token is <code>changeme</code> unless overridden by <code>UADIB_AUTH_TOKEN</code>.
+        <br>5. For real drones, confirm legal flight area and hardware arm-safety checklist.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>3. Exact Startup Steps (First-Time Safe Path)</h2>
+      <div class="manual-box">
+        1. Open terminal.
+        <br>2. Run: <code>cd /Users/drhacker/Documents/drone/UADIB</code>
+        <br>3. Run: <code>./scripts/master_run.sh</code>
+        <br>4. Wait for log line: <code>Starting API server on http://127.0.0.1:PORT</code>
+        <br>5. Open browser: <code>http://127.0.0.1:PORT/</code>
+        <br>6. If 8080 is busy, use printed fallback port.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>4. UI Layout and Meaning of Each Section</h2>
+      <div class="manual-box">
+        <b>Access</b>: set API token for protected routes.
+        <br><b>Simulation Demo</b>: one-click full workflow validation.
+        <br><b>Real Drone Connect</b>: connect to actual endpoint.
+        <br><b>Flight Controls</b>: main flight/attitude commands.
+        <br><b>Movement + Camera</b>: delta movement and stream toggles.
+        <br><b>Telemetry</b>: live WebSocket and single snapshot modes.
+        <br><b>Mission Builder</b>: waypoint optimization and ETA simulation.
+        <br><b>Safety (Geofence)</b>: define allowed operational region.
+        <br><b>Generated Dashboard</b>: capability-driven UI schema output.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>5. Simulation Demo: Full Procedure</h2>
+      <div class="manual-box">
+        Goal: verify complete stack without real drone risk.
+        <br>Step A: keep default simulator source <code>mavlink://udp:127.0.0.1:14550</code>.
+        <br>Step B: click <b>Run Demo Flow</b>.
+        <br>Step C: UADIB executes connect -> takeoff -> telemetry sample -> land.
+        <br>Step D: verify dashboard JSON appears and facilities list is populated.
+        <br>Expected result: no API errors, telemetry shows altitude/speed/battery/gps data.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>6. Real Drone Connect: Full Procedure</h2>
+      <div class="manual-box">
+        1. Connect drone transport physically/network first.
+        <br>2. Enter endpoint in Real Drone Connect.
+        <br>3. Example endpoint forms:
+        <br>&nbsp;&nbsp;- <code>mavlink://udp:192.168.1.50:14550</code>
+        <br>&nbsp;&nbsp;- <code>serial:///dev/ttyUSB0</code>
+        <br>&nbsp;&nbsp;- <code>ros2://topic/drone</code>
+        <br>&nbsp;&nbsp;- <code>sdk://drone.local</code>
+        <br>4. Click <b>Connect Real Drone</b>.
+        <br>5. Confirm profile + capabilities + plugins are returned.
+        <br>6. Click <b>Refresh Dashboard</b> to fetch latest capability layout.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>7. Flight Controls: What Every Button Does</h2>
+      <div class="manual-box">
+        <b>Takeoff</b>: sends target takeoff altitude.
+        <br><b>Land</b>: sends landing command, speed resets to 0.
+        <br><b>Hover</b>: immediate hold behavior by setting speed 0.
+        <br><b>RTL</b>: return-to-launch request.
+        <br><b>Set Speed</b>: updates target speed in meters/second.
+        <br><b>Set Yaw</b>: updates heading (0-360 degrees).
+        <br>Best practice: connect first, then takeoff, then speed/yaw changes.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>8. Movement + Camera Controls</h2>
+      <div class="manual-box">
+        <b>Move Delta</b>: relative move using <code>delta_lat</code>, <code>delta_lon</code>, <code>delta_alt</code>.
+        <br><b>Start Camera</b>: turns camera stream state ON.
+        <br><b>Stop Camera</b>: turns camera stream state OFF.
+        <br>Check telemetry after each action to verify state updates.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>9. Telemetry Operations</h2>
+      <div class="manual-box">
+        <b>Start Live Telemetry</b>: subscribes to <code>/ws/telemetry</code>.
+        <br><b>Stop Live Telemetry</b>: closes WebSocket cleanly.
+        <br><b>Fetch Snapshot</b>: one-time call to <code>/drone/telemetry</code>.
+        <br>Typical telemetry fields: altitude, speed, battery, gps, armed, camera_streaming, geofence/failsafe flags.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>10. Mission Builder</h2>
+      <div class="manual-box">
+        Enter 3 waypoint lines in format <code>lat,lon,alt</code>.
+        <br>Click <b>Build + Simulate Mission</b>.
+        <br>Backend returns optimized waypoint order and simulation values:
+        <br>- <code>distance_m</code>
+        <br>- <code>eta_s</code>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>11. Safety Geofence</h2>
+      <div class="manual-box">
+        Set min/max latitude and longitude bounds.
+        <br>Click <b>Apply Geofence</b>.
+        <br>Telemetry will include inside/outside fence checks.
+        <br>Use conservative boundaries for first test flights.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>12. Common Errors and Fixes</h2>
+      <div class="manual-box">
+        <b>{"detail":"Not Found"}</b>: wrong path. Use root UI <code>/</code> or API docs <code>/docs</code>.
+        <br><b>401 Unauthorized</b>: token mismatch. Update Access token to match <code>UADIB_AUTH_TOKEN</code>.
+        <br><b>Address already in use</b>: rerun <code>master_run.sh</code>; it frees port or auto-selects next.
+        <br><b>WebSocket disconnect traceback</b>: fixed in latest build; restart server if using old process.
+        <br><b>No drone connected</b>: connect with Simulation or Real endpoint before sending controls.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>13. API Route Cheat Sheet</h2>
+      <div class="manual-box">
+        <code>POST /system/connect</code>
+        <br><code>POST /system/demo/simulation</code>
+        <br><code>GET /system/dashboard</code>
+        <br><code>POST /system/mission/build</code>
+        <br><code>GET /drone/telemetry</code>
+        <br><code>POST /drone/takeoff</code>
+        <br><code>POST /drone/land</code>
+        <br><code>POST /drone/hover</code>
+        <br><code>POST /drone/rtl</code>
+        <br><code>POST /drone/set_speed</code>
+        <br><code>POST /drone/yaw</code>
+        <br><code>POST /drone/move</code>
+        <br><code>POST /drone/camera/start</code>
+        <br><code>POST /drone/camera/stop</code>
+        <br><code>POST /drone/geofence</code>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>14. Operator Safety Checklist (Always Do This)</h2>
+      <div class="manual-box">
+        1. Confirm battery health before arm/takeoff.
+        <br>2. Verify GPS lock if navigation is needed.
+        <br>3. Keep geofence active for unknown locations.
+        <br>4. Test hover and land before mission execution.
+        <br>5. Keep emergency land/RTL ready.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>15. Glossary</h2>
+      <div class="manual-box">
+        <b>MAVLink</b>: common UAV messaging protocol.
+        <br><b>ROS2</b>: robotics middleware topic/service ecosystem.
+        <br><b>Telemetry</b>: real-time status data from drone.
+        <br><b>Geofence</b>: geographic boundary constraints.
+        <br><b>RTL</b>: return to launch location.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>16. Developer Signature and Security Marker</h2>
+      <div class="manual-box">
+        Developer: <b>Satya Narayan Sahu</b>, Security Researcher
+        <br>Security ID (partially masked): <code>SNS-SEC-47A9-****-X2F1</code>
+        <br>Verification Secret Code: <code>UADIB-SNS-SHIELD-2026</code>
+        <br>Note: half of the security ID is intentionally secreted.
+      </div>
+    </section>
+  </main>
+  <script src="/static/security_lock.js?v=20260308-2"></script>
+</body>
+</html>

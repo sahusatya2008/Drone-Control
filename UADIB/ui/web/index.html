@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UADIB Control Center</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header>
+    <div>
+      <h1>UADIB Control Center</h1>
+      <p>Universal Autonomous Drone Interface Builder</p>
+    </div>
+    <div class="header-actions">
+      <a class="btn-link" href="/docs" target="_blank" rel="noreferrer">API Docs</a>
+      <a class="btn-link" href="/uarip" rel="noreferrer">UARIP Mode</a>
+      <a class="btn-link" href="/static/ipr.html" rel="noreferrer">IPR</a>
+      <a class="btn-link" href="/static/manual.html" target="_blank" rel="noreferrer">Open Full Manual</a>
+    </div>
+  </header>
+  <aside id="deviceMeta" class="device-meta">Loading device identity...</aside>
+
+  <main>
+    <section class="card">
+      <div class="section-title">
+        <h2>Access</h2>
+        <button class="manual-btn" data-manual="access">Manual</button>
+      </div>
+      <label>API Token
+        <input id="token" value="changeme" />
+      </label>
+      <p class="hint">Protected routes require header <code>X-UADIB-Token</code>.</p>
+      <div id="accessManual" class="manual-box hidden"></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <h2>Simulation Demo</h2>
+        <button class="manual-btn" data-manual="simulation">Manual</button>
+      </div>
+      <label>Simulator Source
+        <input id="simSource" value="mavlink://udp:127.0.0.1:14550" />
+      </label>
+      <div class="btn-row">
+        <button id="runDemo">Run Demo Flow</button>
+        <button id="connectDemoOnly">Connect Demo Only</button>
+      </div>
+      <div id="demoResult" class="output"></div>
+      <div id="simulationManual" class="manual-box hidden"></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <h2>Real Drone Connect</h2>
+        <button class="manual-btn" data-manual="realConnect">Manual</button>
+      </div>
+      <label>Drone Endpoint
+        <input id="realSource" placeholder="serial:///dev/ttyUSB0 or mavlink://udp:IP:14550 or ros2://topic/drone" />
+      </label>
+      <div class="grid-3">
+        <label>Protocol
+          <select id="connProtocol">
+            <option value="mavlink">mavlink</option>
+            <option value="udp">udp</option>
+            <option value="tcp">tcp</option>
+            <option value="ros2">ros2</option>
+            <option value="sdk">sdk</option>
+            <option value="serial">serial</option>
+          </select>
+        </label>
+        <label>Host / Topic
+          <input id="connHost" value="127.0.0.1" />
+        </label>
+        <label>Port
+          <input id="connPort" type="number" value="14550" />
+        </label>
+      </div>
+      <div class="grid-2">
+        <label>Transport (for MAVLink)
+          <input id="connTransport" value="udp" />
+        </label>
+        <label>Serial Device (for serial mode)
+          <input id="connDevice" placeholder="/dev/ttyUSB0" />
+        </label>
+      </div>
+      <div class="btn-row">
+        <button id="connectReal">Connect Real Drone</button>
+        <button id="connectRealDetails">Connect Using Details</button>
+        <button id="refreshDashboard">Refresh Dashboard</button>
+      </div>
+      <div id="connectResult" class="output"></div>
+      <div id="realConnectManual" class="manual-box hidden"></div>
+    </section>
+
+    <section id="cameraCard" class="card hidden">
+      <div class="section-title">
+        <h2>Real Drone Camera View</h2>
+        <button class="manual-btn" data-manual="cameraView">Manual</button>
+      </div>
+      <div class="grid-2">
+        <label>Camera Source (RTSP/HTTP/USB index)
+          <input id="cameraSource" placeholder="rtsp://user:pass@drone-ip:554/stream or 0" />
+        </label>
+        <label>Stream Auth Token
+          <input id="cameraToken" value="changeme" />
+        </label>
+      </div>
+      <div class="btn-row">
+        <button id="cameraConfigure">Configure Camera Source</button>
+        <button id="cameraHealth">Check Camera Health</button>
+        <button id="cameraStartView">Start Live View</button>
+        <button id="cameraStopView">Stop Live View</button>
+      </div>
+      <div id="cameraResult" class="output"></div>
+      <img id="cameraFeed" class="camera-feed hidden" alt="Real drone camera feed" />
+      <div id="cameraViewManual" class="manual-box hidden"></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <h2>Flight Controls</h2>
+        <button class="manual-btn" data-manual="flight">Manual</button>
+      </div>
+      <div class="btn-row">
+        <button id="preflightBtn">Run Preflight Check</button>
+      </div>
+      <div id="preflightResult" class="output">Preflight not run yet.</div>
+      <div class="grid-3">
+        <label>Takeoff Altitude (m)
+          <input id="takeoffAlt" type="number" value="5" min="1" step="0.5" />
+        </label>
+        <label>Speed (m/s)
+          <input id="speedVal" type="number" value="4" min="0" step="0.1" />
+        </label>
+        <label>Yaw (deg)
+          <input id="yawVal" type="number" value="45" min="0" max="360" step="1" />
+        </label>
+      </div>
+      <div class="btn-row">
+        <button id="takeoffBtn">Takeoff</button>
+        <button id="landBtn">Land</button>
+        <button id="hoverBtn">Hover</button>
+        <button id="rtlBtn">RTL</button>
+        <button id="setSpeedBtn">Set Speed</button>
+        <button id="setYawBtn">Set Yaw</button>
+      </div>
+      <div id="flightResult" class="output"></div>
+      <div id="flightManual" class="manual-box hidden"></div>
+    </section>
+
+    <section class="card two-col">
+      <div>
+        <div class="section-title">
+          <h2>Movement + Camera</h2>
+          <button class="manual-btn" data-manual="movementCamera">Manual</button>
+        </div>
+        <div class="grid-3">
+          <label>Delta Lat
+            <input id="deltaLat" type="number" value="0.0001" step="0.0001" />
+          </label>
+          <label>Delta Lon
+            <input id="deltaLon" type="number" value="0.0001" step="0.0001" />
+          </label>
+          <label>Delta Alt
+            <input id="deltaAlt" type="number" value="1.0" step="0.1" />
+          </label>
+        </div>
+        <div class="btn-row">
+          <button id="moveBtn">Move Delta</button>
+          <button id="cameraStartBtn">Start Camera</button>
+          <button id="cameraStopBtn">Stop Camera</button>
+        </div>
+        <div id="movementResult" class="output"></div>
+        <div id="movementCameraManual" class="manual-box hidden"></div>
+      </div>
+
+      <div>
+        <div class="section-title">
+          <h2>Telemetry</h2>
+          <button class="manual-btn" data-manual="telemetry">Manual</button>
+        </div>
+        <div class="btn-row">
+          <button id="startWs">Start Live Telemetry</button>
+          <button id="stopWs">Stop Live Telemetry</button>
+          <button id="pullTelemetry">Fetch Snapshot</button>
+        </div>
+        <pre id="telemetryBox" class="output">No telemetry yet.</pre>
+        <div id="telemetryManual" class="manual-box hidden"></div>
+      </div>
+    </section>
+
+    <section class="card two-col">
+      <div>
+        <div class="section-title">
+          <h2>Mission Builder</h2>
+          <button class="manual-btn" data-manual="mission">Manual</button>
+        </div>
+        <div class="grid-3">
+          <label>WP1 (lat,lon,alt)
+            <input id="wp1" value="12.9716,77.5946,10" />
+          </label>
+          <label>WP2 (lat,lon,alt)
+            <input id="wp2" value="12.9720,77.6000,15" />
+          </label>
+          <label>WP3 (lat,lon,alt)
+            <input id="wp3" value="12.9680,77.6100,12" />
+          </label>
+        </div>
+        <div class="btn-row">
+          <button id="buildMissionBtn">Build + Simulate Mission</button>
+        </div>
+        <div id="missionResult" class="output"></div>
+        <div id="missionManual" class="manual-box hidden"></div>
+      </div>
+
+      <div>
+        <div class="section-title">
+          <h2>Safety (Geofence)</h2>
+          <button class="manual-btn" data-manual="safety">Manual</button>
+        </div>
+        <div class="grid-2">
+          <label>Min Lat
+            <input id="minLat" type="number" value="12.9600" step="0.0001" />
+          </label>
+          <label>Max Lat
+            <input id="maxLat" type="number" value="12.9800" step="0.0001" />
+          </label>
+          <label>Min Lon
+            <input id="minLon" type="number" value="77.5800" step="0.0001" />
+          </label>
+          <label>Max Lon
+            <input id="maxLon" type="number" value="77.6200" step="0.0001" />
+          </label>
+        </div>
+        <div class="btn-row">
+          <button id="setGeofenceBtn">Apply Geofence</button>
+        </div>
+        <div id="safetyResult" class="output"></div>
+        <div id="safetyManual" class="manual-box hidden"></div>
+      </div>
+    </section>
+
+    <section class="card two-col">
+      <div>
+        <h2>Generated Dashboard</h2>
+        <pre id="dashboardBox" class="output">No dashboard generated yet.</pre>
+      </div>
+      <div>
+        <h2>Facilities</h2>
+        <ul id="facilitiesList"></ul>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/static/app.js"></script>
+  <script type="module" src="/static/device_meta.js?v=20260308-1"></script>
+  <script src="/static/security_lock.js?v=20260308-2"></script>
+</body>
+</html>
